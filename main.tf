@@ -7,6 +7,7 @@ locals {
     engine              = var.engine
     host                = var.host
     port                = var.port
+    dbname              = var.dbname
     dbClusterIdentifier = var.db_cluster_identifier
   }
   secret_value_multiuser = {
@@ -15,6 +16,7 @@ locals {
     engine              = var.engine
     host                = var.host
     port                = var.port
+    dbname              = var.dbname
     masterarn           = var.master_secret_arn
     dbClusterIdentifier = var.db_cluster_identifier
   }

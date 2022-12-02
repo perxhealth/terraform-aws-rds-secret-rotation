@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "db_cluster_identifier" {
+  description = "The DB cluster identifier"
+  type        = string
+}
+
 variable "username" {
   description = "The username"
   type        = string
@@ -10,6 +15,26 @@ variable "username" {
 
 variable "password" {
   description = "The password for the user"
+  type        = string
+}
+
+variable "engine" {
+  description = "The database engine type"
+  type        = string
+}
+
+variable "host" {
+  description = "The host name of the database instance"
+  type        = string
+}
+
+variable "port" {
+  description = "The port number of the database instance"
+  type        = number
+}
+
+variable "dbname" {
+  description = "The DB name"
   type        = string
 }
 
@@ -34,25 +59,7 @@ EOT
   default     = "single"
 }
 
-variable "engine" {
-  description = "The database engine type"
-  type        = string
-}
 
-variable "host" {
-  description = "The host name of the database instance"
-  type        = string
-}
-
-variable "port" {
-  description = "The port number of the database instance"
-  type        = number
-}
-
-variable "db_cluster_identifier" {
-  description = "The DB cluster identifier"
-  type        = string
-}
 
 variable "master_secret_arn" {
   description = "The superuser credentials used to update another secret in the multiuser rotation strategy."
