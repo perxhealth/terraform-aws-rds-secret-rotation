@@ -1,3 +1,5 @@
+Forked from https://github.com/JCapriotti/terraform-aws-rds-secret-rotation
+
 # AWS RDS Secret Rotation
 
 A Terraform module that creates an AWS Secrets Manager secret for RDS, with optional rotation support.
@@ -17,7 +19,7 @@ Secret rotation is not only a great thing to do from a security perspective, but
 
 ```terraform
 module "root_user" {
-  source = "JCapriotti/rds-secret-rotation"
+  source = "git::https://bitbucket.org:perxhealth/terraform-aws-rds-secret-rotation"
 
   db_cluster_identifier = "my-db"
   engine                = "postgres"
