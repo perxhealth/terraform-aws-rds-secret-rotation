@@ -75,8 +75,8 @@ data "aws_iam_policy_document" "write_secret_policy" {
 // Read Permissions
 
 resource "aws_secretsmanager_secret_policy" "readonly_secret_policy" {
-  policy     = data.aws_iam_policy_document.readonly_secret_policy
   secret_arn = data.aws_secretsmanager_secret.this.arn
+  policy     = data.aws_iam_policy_document.readonly_secret_policy.json
 }
 
 data "aws_iam_policy_document" "readonly_secret_policy" {
