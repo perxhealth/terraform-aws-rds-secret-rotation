@@ -1,6 +1,4 @@
 locals {
-  name                   = "${var.name}-rotate-secret"
-
   secret_value_single_user = {
     username            = var.username
     password            = var.password

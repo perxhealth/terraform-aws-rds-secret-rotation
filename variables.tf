@@ -38,12 +38,6 @@ variable "dbname" {
   type        = string
 }
 
-variable "rotation_days" {
-  description = "The number of days between rotations. When set to `null` (the default) rotation is not configured."
-  type        = number
-  default     = null
-}
-
 variable "secret_recovery_window_days" {
   description = "The number of days that Secrets Manager waits before deleting a secret"
   type        = number
