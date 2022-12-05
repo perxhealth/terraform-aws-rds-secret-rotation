@@ -49,12 +49,14 @@ data "aws_secretsmanager_secret" "this" {
 resource "aws_secretsmanager_secret_policy" "this" {
   count      = sum([length(var.write_role_arns), length(var.read_role_arns)]) > 0 ? 1 : 0
   secret_arn = data.aws_secretsmanager_secret.this.arn
-  policy     = flatten([data.aws_iam_policy_document.write_secret_policy.json, data.aws_iam_policy_document.readonly_secret_policy.json])
+  policy     = data.aws_iam_policy_document.secret_policy.json
+
+  block_public_policy = true
 }
 
 // Write permissions
 
-data "aws_iam_policy_document" "write_secret_policy" {
+data "aws_iam_policy_document" "secret_policy" {
   statement {
     effect = "Allow"
     principals {
@@ -68,11 +70,7 @@ data "aws_iam_policy_document" "write_secret_policy" {
     ]
     resources = ["*"]
   }
-}
 
-// Read Permissions
-
-data "aws_iam_policy_document" "readonly_secret_policy" {
   statement {
     effect = "Allow"
     principals {
