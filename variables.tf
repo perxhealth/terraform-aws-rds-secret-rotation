@@ -67,6 +67,10 @@ variable "tags" {
   default     = {}
 }
 
-variable "role_arns" {
+variable "read_role_arns" {
+  type = list(string)
+}
+
+variable "write_role_arns" {
   type = list(string)
 }

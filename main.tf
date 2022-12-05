@@ -48,11 +48,24 @@ data "aws_iam_policy_document" "this" {
   statement {
     effect = "Allow"
     principals {
-      identifiers = var.role_arns
+      identifiers = var.read_role_arns
       type        = "AWS"
     }
     actions = [
       "secretsmanager:GetSecretValue"
+    ]
+    resources = ["*"]
+  }
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = var.write_role_arns
+      type        = "AWS"
+    }
+    actions = [
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:PutSecretValue",
+      "secretsmanager:UpdateSecretVersionStage"
     ]
     resources = ["*"]
   }
