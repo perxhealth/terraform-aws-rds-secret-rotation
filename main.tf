@@ -23,12 +23,14 @@ locals {
 data "aws_region" "current" {}
 
 resource "aws_secretsmanager_secret" "this" {
+  count                   = var.create_secret ? 1 : 0
   name                    = var.name
   recovery_window_in_days = var.secret_recovery_window_days
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
-  secret_id      = aws_secretsmanager_secret.this.id
+  count          = var.create_secret ? 1 : 0
+  secret_id      = aws_secretsmanager_secret.this[count.index].id
   secret_string  = jsonencode(var.rotation_strategy == "single" ? local.secret_value_single_user : local.secret_value_multiuser)
 
   lifecycle {
@@ -39,23 +41,22 @@ resource "aws_secretsmanager_secret_version" "this" {
   }
 }
 
-resource "aws_secretsmanager_secret_policy" "this" {
-  secret_arn = aws_secretsmanager_secret.this.arn
-  policy     = data.aws_iam_policy_document.this.json
+// To reference when not creating
+
+data "aws_secretsmanager_secret" "this" {
+  name = var.name
+  depends_on = [aws_secretsmanager_secret.this]
 }
 
-data "aws_iam_policy_document" "this" {
-  statement {
-    effect = "Allow"
-    principals {
-      identifiers = var.read_role_arns
-      type        = "AWS"
-    }
-    actions = [
-      "secretsmanager:GetSecretValue"
-    ]
-    resources = ["*"]
-  }
+// Write permissions
+
+resource "aws_secretsmanager_secret_policy" "write_secret_policy" {
+  secret_arn = data.aws_secretsmanager_secret.this.arn
+  policy     = data.aws_iam_policy_document.write_secret_policy.json
+}
+
+data "aws_iam_policy_document" "write_secret_policy" {
+
   statement {
     effect = "Allow"
     principals {
@@ -66,6 +67,27 @@ data "aws_iam_policy_document" "this" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:PutSecretValue",
       "secretsmanager:UpdateSecretVersionStage"
+    ]
+    resources = ["*"]
+  }
+}
+
+// Read Permissions
+
+resource "aws_secretsmanager_secret_policy" "readonly_secret_policy" {
+  policy     = data.aws_iam_policy_document.readonly_secret_policy
+  secret_arn = data.aws_secretsmanager_secret.this.arn
+}
+
+data "aws_iam_policy_document" "readonly_secret_policy" {
+  statement {
+    effect = "Allow"
+    principals {
+      identifiers = var.read_role_arns
+      type        = "AWS"
+    }
+    actions = [
+      "secretsmanager:GetSecretValue"
     ]
     resources = ["*"]
   }

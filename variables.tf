@@ -3,6 +3,12 @@ variable "name" {
   type        = string
 }
 
+variable "create_secret" {
+  description = "If the module should create a secret"
+  default = true
+  type = bool
+}
+
 variable "db_cluster_identifier" {
   description = "The DB cluster identifier"
   type        = string
