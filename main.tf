@@ -51,6 +51,7 @@ data "aws_secretsmanager_secret" "this" {
 // Write permissions
 
 resource "aws_secretsmanager_secret_policy" "write_secret_policy" {
+  count      = length(var.write_role_arns) > 0 ? 1 : 0
   secret_arn = data.aws_secretsmanager_secret.this.arn
   policy     = data.aws_iam_policy_document.write_secret_policy.json
 }
@@ -75,6 +76,7 @@ data "aws_iam_policy_document" "write_secret_policy" {
 // Read Permissions
 
 resource "aws_secretsmanager_secret_policy" "readonly_secret_policy" {
+  count      = length(var.read_role_arns) > 0 ? 1 : 0
   secret_arn = data.aws_secretsmanager_secret.this.arn
   policy     = data.aws_iam_policy_document.readonly_secret_policy.json
 }
